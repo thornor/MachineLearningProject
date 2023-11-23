@@ -13,3 +13,7 @@ carte objectivement meilleure peut-être inutile si elle ne fonctionne pas avec 
 Les données provenant de l'application *Magic Arena* proviennent d'un mode de jeu au fonctionnement similaire, à l'exception qque toutes les cartes choisies sont virtuelles. Le 
 modèle se basera sur les choix faits par les joueurs lors des drafts de l'extension la plus récente, *Les Friches d'Eldraine*, sorti début septembre. Cela permet d'avoir une base de 
 données suffisament grande pour pouvoir correctement entrainer et évaluer le modèle, tout en restant raisonnable sur sa taille. 
+
+Nous pouvons approcher ce problème comme celui d'un problème de génération de langage, où les mots seraient les cartes choisies, et les phrases l'ordre de choix.
+Il existe cependant une particularité dans notre modèle par rapport à un modèle de langage génératif classique: pour chaque choix de carte (ie chaque génération de mot),
+le modèle n'aura accès qu'à une liste limitée de choix, déterminée en entrée. Comme le joueur, il ne pourra choisir une carte que parmi les 14 possibles, puis les 13, etc...

@@ -2,6 +2,8 @@ import csv
 import itertools
 import re
 import nltk
+import numpy as np
+
 
 pick_start_token = "PICK_START"
 pick_end_token = "PICK_END"
@@ -30,8 +32,22 @@ with open('Data/draft_data_public.WOE.TradDraft.csv', 'r') as f:
             sentences[len(sentences)-1] = ("%s %s" % (old_sentence, reader_list[k+1][idx_pick_column]))
     # pick_order = itertools.chain([nltk.sent_tokenize(x[0].decode('utf-8').lower() for x in reader)])
     sentences[len(sentences) - 1] += (" %s" % pick_end_token)
-    print(sentences)
+    print(len(sentences))
 
     tokenize_sentences=[nltk.word_tokenize(sent) for sent in sentences]
     word_freq = nltk.FreqDist(itertools.chain(*tokenize_sentences))
     print("Found %d unique words tokens." % len(word_freq.items()))
+    vocab = word_freq.most_common()
+    index_to_word = [x[0] for x in vocab]
+    word_to_index = dict([(w, i) for i, w in enumerate(index_to_word)])
+    print("The least picked card is '%s' and appeared %d times." % (vocab[-1][0], vocab[-1][1]))
+
+    print("\nExample sentence: '%s'" % sentences[0])
+    print("\nExample sentence after Pre-processing: '%s'" % tokenize_sentences[0])
+    # Create the training data
+    x_train = [[word_to_index[w] for w in sent[:-1]] for sent in tokenize_sentences]
+    y_train = [[word_to_index[w] for w in sent[1:]] for sent in tokenize_sentences]
+    print(x_train[0])
+    print("x: \n %s \n %s" % (sentences[0], x_train[0]))
+    print("y: \n %s \n %s" % (sentences[0], y_train[0]))
+
