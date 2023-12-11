@@ -14,7 +14,7 @@ def data_process():
 
     draft_idx=""
     print("Reading CSV file...")
-    with open('Data/draft_data_public.WOE.TradDraft.csv', 'r') as f:
+    with open('Data/train_data.csv', 'r') as f:
         reader = csv.reader(f, skipinitialspace=True)
         reader_list=[]
         for x in reader:
@@ -23,6 +23,7 @@ def data_process():
             x_re = [re.sub(pattern="'", repl="", string=x_re[i]) for i in range(len(x_re))]
             x_re = [re.sub(pattern="-", repl="", string=x_re[i]) for i in range(len(x_re))]
             reader_list.append(x_re)
+        print("Creating sequences")
         sentences = []
         idx_draft_column = reader_list[0].index("draft_id")
         idx_pick_column = reader_list[0].index("pick")
@@ -39,6 +40,9 @@ def data_process():
 
         tokenize_sentences=[nltk.word_tokenize(sent) for sent in sentences]
         maxlen=len(max(tokenize_sentences, key=len))
+        for sent in tokenize_sentences:
+            if len(sent) != 44:
+                print(tokenize_sentences.index(sent), sent)
         word_freq = nltk.FreqDist(itertools.chain(*tokenize_sentences))
         print("Found %d unique words tokens." % len(word_freq.items()))
         vocab = word_freq.most_common()
