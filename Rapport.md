@@ -17,3 +17,17 @@ données suffisament grande pour pouvoir correctement entrainer et évaluer le m
 Nous pouvons approcher ce problème comme celui d'un problème de génération de langage, où les mots seraient les cartes choisies, et les phrases l'ordre de choix.
 Il existe cependant une particularité dans notre modèle par rapport à un modèle de langage génératif classique: pour chaque choix de carte (ie chaque génération de mot),
 le modèle n'aura accès qu'à une liste limitée de choix, déterminée en entrée. Comme le joueur, il ne pourra choisir une carte que parmi les 14 possibles, puis les 13, etc...
+
+Chaque ligne de la base de données initiale est constituée comme suivant:
+- L'extension jouée
+- Le format de jeu utilisé 
+- L'identifiant du draft observé et l'heure à laquelle le joueur a participé
+- Son nombre de victoires et de défaites dans ce format avant de commencer
+- Le nom de la carte choisie
+- Un booléen indiquant si cette carte choisie a été jouée ou non
+- Une suite de booléens permettant de connaître les autres choix possibles pour le joueur 
+- Une suite de booléens permettant de connaître les choix précédents du joueur
+- Son taux de victoires avec le paquet formé.
+
+Dans un premier temps, nous n'utiliserons que l'identifiant des différents drafts, ainsi que les cartes choisies. Etant donné la quantité de données présente dans cette base qui ne serons pas exploitée, il m'a paru peu pertient de créer un tenseur global, qui aurait été retravaillé. Il m'a paru préférable de construire de simples array numpy correctement dimensionnées et avec uniquement les données nécéssaires, avant de le transformer en tenseur exploitable par pytorch.
+
