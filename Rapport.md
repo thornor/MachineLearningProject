@@ -28,6 +28,8 @@ Chaque ligne de la base de données initiale est constituée comme suivant:
 - Une suite de booléens permettant de connaître les autres choix possibles pour le joueur 
 - Une suite de booléens permettant de connaître les choix précédents du joueur
 - Son taux de victoires avec le paquet formé.
+  
+Cependant, la base de données contient également des drafts où le joueur n'est pas allé au bout, il n'a pas fait touts les choix nécéssaires pour pouvoir construire son paquet. Ceci se matérialise par des identifiants de drafts qui n'apparaissent pas suffisamant pour être exploités. Il est alors obligatiore dans notre cas de faire un tri des données, en enlevant celles qui ne correspondant pas à un draft complet.
 
 Dans un premier temps, nous n'utiliserons que l'identifiant des différents drafts, ainsi que les cartes choisies. Etant donné la quantité de données présente dans cette base qui ne serons pas exploitée, il m'a paru peu pertient de créer un tenseur global, qui aurait été retravaillé. Il m'a paru préférable de construire de simples array numpy correctement dimensionnées et avec uniquement les données nécéssaires, avant de le transformer en tenseur exploitable par pytorch.
 
@@ -38,4 +40,17 @@ Cette fonction data_process fonctionne alors comme suit:
 - On crée les données d'entrainement et les valeurs de référence à partir de ses phrases tokenisées sous forme de numpy array.
 - On va redimensionner ces numpy arrays pour pouvoir en sortir plusieurs batchs pour une éventuelle cross validation.
 - A partir des données d'entraînement redimensionnées, on va créer une nouvelle numpy array, qui va retranscrire les choix dans une matrice à 4 dimensions, ou chaque chois de carte sera représenté par un 1 dans chaque colonne aussi grande que le nombre de cartes total.
-- On crée nos tenseurs (entrainement et de référence) à partir de ces données
+- On crée nos tenseurs (entrainement et de référence) à partir de ces données.
+
+A partir de ce moment là, on peut créer un premier modèle.
+
+On va dans un premier temps utiliser un modèle RNN simple pour obtenir des premiers résultats. Celui-ci sera suivi d'un modèle linaire afin de pouvoir exploiter les données En utilisant notre base de données à ce moment composé de 100 parties, et en faisant travailler notre modèle sur 300 epochs avec une dimension cachée de 20 et un learning rate de 0.001, on obtient ce graphe: [Graphe 1](graphes/Loss_300_epochs_hidden_dim_20.png). On retrouve la training loss en orange, et la testloss en bleu, toutes deux étant une perte cross-entropique.
+
+Plusieurs problèmes avec ce premier graphe:
+- A partir d'une soixantaine d'epochs, la test loss deveint inférieure à la training loss. Ce problème était dû au fait que la fonction de test travaillait sur la même base de données que la fonction d'entraînement. Ce problème a été réglé par la suite.
+- On trouve trois pics de loss aux epochs 35, 140 et 220 (environ). Il est difficile pour moi aujourd'hui encore de comprendre l'origine de ces sauts, mais ils doivent probablement venir du manque de représentation de différentes cartes, qui pouvaient mener à de grosses différences entre la prédiction et la valeur de référence. (A ce moement-là, certaines cartes n'apparaissaient qu'une seule fois sur toute la base de donnée)
+
+Suite à ces premiers résultats, j'ai augmenté la base de données, passant de 100 phrases à 400 phrases (ce qui complexifie l'envoi de la base de données sur Github), et j'ai voulu essayer d'appliquer une cross-validation sur ce modèle. Puisque la fonction KFolds de pytorch fonctionne avec des datasets que je n'ai pas, j'ai du essayer de construire ma propre cross validation:
+- Avant la transformation en tenseur pytorch, on redimensionne les numpy array de façon à en sortir plusieurs batchs. Dans notre cas, comme notre base de données n'est pas si grande que ça, on ne fera que 5 batchs, générés à partir des phrases précédememnt tokenisées, choisies aléatoirement.
+- Ensuite chaque batch sera utilisé comme test tandis que les autres seront utilisées durant l'entrâinement, dans 5 modèles indépendants
+
