@@ -54,3 +54,8 @@ Suite à ces premiers résultats, j'ai augmenté la base de données, passant de
 - Avant la transformation en tenseur pytorch, on redimensionne les numpy array de façon à en sortir plusieurs batchs. Dans notre cas, comme notre base de données n'est pas si grande que ça, on ne fera que 5 batchs, générés à partir des phrases précédememnt tokenisées, choisies aléatoirement.
 - Ensuite chaque batch sera utilisé comme test tandis que les autres seront utilisées durant l'entrâinement, dans 5 modèles indépendants
 
+En gardant les mêmes hyper-paramètres d'entrée, et en appliquant une cross validation, on obtient les résultats suivants: [Training Loss](graphes/Training_Loss_300_epochs_hidden_dim_20_cross_val.png), [Test Loss](graphes/Test_Loss_300_epochs_hidden_dim_20_cross_val.png)
+
+En augmentant la dimesnion cachée à 50, on obtient ces résultats: [Training Loss](graphes/Training_Loss_300_epochs_hidden_dim_50_cross_val.png), [Test Loss](graphes/Test_Loss_300_epochs_hidden_dim_50_cross_val.png)
+
+On voit
