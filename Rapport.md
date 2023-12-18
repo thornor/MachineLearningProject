@@ -31,3 +31,11 @@ Chaque ligne de la base de données initiale est constituée comme suivant:
 
 Dans un premier temps, nous n'utiliserons que l'identifiant des différents drafts, ainsi que les cartes choisies. Etant donné la quantité de données présente dans cette base qui ne serons pas exploitée, il m'a paru peu pertient de créer un tenseur global, qui aurait été retravaillé. Il m'a paru préférable de construire de simples array numpy correctement dimensionnées et avec uniquement les données nécéssaires, avant de le transformer en tenseur exploitable par pytorch.
 
+Cette fonction data_process fonctionne alors comme suit:
+- Après chargement des données dans un reader, on crée une matrice copie ne gardant que les données qui nous intéressent, et dans laquelle les noms des cartes sont mis en forme en supprimant toutes les virgules, apostrophes et tirets des noms, et en remplaçant les espaces par des underscores.
+- On crée une liste de "phrases", en mettant chaque choix de carte les unes après les autres, en fonction des identifiants des drafts. Une phrase type ressemble donc à ceci: [PICK_START, Expel_The_Interlopers, Chancellor_of_Tales, [...] , Hopeless_Nightmare, Plunge_into_Winter, PICK_END]
+- On tokenise les différents mots de chaque phrase en fonction de leur taux d'apparition: Plus une carte est prise souvent, plus son token aura une valeur basse.
+- On crée les données d'entrainement et les valeurs de référence à partir de ses phrases tokenisées sous forme de numpy array.
+- On va redimensionner ces numpy arrays pour pouvoir en sortir plusieurs batchs pour une éventuelle cross validation.
+- A partir des données d'entraînement redimensionnées, on va créer une nouvelle numpy array, qui va retranscrire les choix dans une matrice à 4 dimensions, ou chaque chois de carte sera représenté par un 1 dans chaque colonne aussi grande que le nombre de cartes total.
+- On crée nos tenseurs (entrainement et de référence) à partir de ces données
