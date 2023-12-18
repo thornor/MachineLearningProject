@@ -72,4 +72,9 @@ On obtient les résultats suivants :  [Training Loss](graphes/Training_Loss_500_
 
 On retrouve des résultats de perte similaire à ceux obtenu avant la diminution du learning rate, à savoir autour de 5. On a cependant une anomalie marquée sur l'un des batchs, avec une grande augmantation de la perte qui en l'état pourrait être dû à une mauvaise répartition des données entre les batchs (les cartes peu présentes se sont peut-être retrouvés dans le même batch).
 
-Pour conclure, même si on obtient un modèle fonctionnel, il reste de nombreuses pistes pour optimiser le modèle qui n'ont pas pu être mis en place par manque de temps. Comme dit précédemment, on aurait pu limiter les choix du modèle 
+Pour conclure, même si on obtient un modèle fonctionnel, il reste de nombreuses pistes pour optimiser le modèle qui n'ont pas pu être mis en place par manque de temps. Comme dit précédemment, on aurait pu limiter les choix du modèle à une liste de choix correspondant aux choix possibles pour le joueur.
+On aurait pu également modifier les poids initiaux des neurones en fonction des choix des gens: calculer une gaussienne normale centrée en le moment moyen où cette carte est prise (centrée en 2 si cette carte est en moyenne prise en deuxième position par exemple), puis appliquer le poids de chaque résultat pour chaque nombre entier au neurone correspondant. Chaque résultat serait alors présent sur 3 neurones (Par exemple, pour une carte donnée, le résultat de la gaussienne en 1 serait utilisé comme poids initial pour les neurones correspondnat à ce choix sur la première, la 15e et la 29e couche). Ce poids aurait pu être eventuellement modifié par un bruit supplémentaire).
+
+Enfin, on aurait pu essayer changer notre modèle de RNN par un modèle LSTM, afin de vérifier si le plancher de loss autour de 5 est du à un problème de disparition de gradient inhérent au modèle, ou si cela a une autre cause.
+
+
