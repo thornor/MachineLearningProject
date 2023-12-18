@@ -58,4 +58,4 @@ En gardant les mêmes hyper-paramètres d'entrée, et en appliquant une cross va
 
 En augmentant la dimesnion cachée à 50, on obtient ces résultats: [Training Loss](graphes/Training_Loss_300_epochs_hidden_dim_50_cross_val.png), [Test Loss](graphes/Test_Loss_300_epochs_hidden_dim_50_cross_val.png)
 
-On voit
+On voit certes que le premier problème (à savoir une Test Loss inférieure à la Training loss) a été réglé, mais le deuxième problème a empiré. Toutes les pertes calculées, bien  que suivant grossièrement une trajectoire similaire, varient fortement localement. On va donc diminuer le learning rate, passant 0.001 à 0.0001. On obtient alors, avec une dimension cachée de 20, les résultats suivants:
