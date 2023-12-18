@@ -59,3 +59,13 @@ En gardant les mêmes hyper-paramètres d'entrée, et en appliquant une cross va
 En augmentant la dimesnion cachée à 50, on obtient ces résultats: [Training Loss](graphes/Training_Loss_300_epochs_hidden_dim_50_cross_val.png), [Test Loss](graphes/Test_Loss_300_epochs_hidden_dim_50_cross_val.png)
 
 On voit certes que le premier problème (à savoir une Test Loss inférieure à la Training loss) a été réglé, mais le deuxième problème a empiré. Toutes les pertes calculées, bien  que suivant grossièrement une trajectoire similaire, varient fortement localement. On va donc diminuer le learning rate, passant 0.001 à 0.0001. On obtient alors, avec une dimension cachée de 20, les résultats suivants:
+[Training Loss](graphes/Training_Loss_300_epochs_hidden_dim_20_lr_00001.png), [Test Loss](graphes/Test_Loss_300_epochs_hidden_dim_20_lr_00001.png)
+
+On observe que la perte finale est plus élevée que précédemment, mais on obtient des courbe plus lisses.
+
+On va maintenant essayer de pousser notre modèle: On effectue une cross-validation à 5 batchs avec les hyper-paramètres suivants:
+- Nombre d'epochs : 500
+- Dimension cachée : 100
+- Learning Rate : 0.0001
+  
+On obtient les résultats suivants :
