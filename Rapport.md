@@ -44,7 +44,7 @@ Cette fonction data_process fonctionne alors comme suit:
 
 A partir de ce moment là, on peut créer un premier modèle.
 
-On va dans un premier temps utiliser un modèle RNN simple pour obtenir des premiers résultats. Celui-ci sera suivi d'un modèle linaire afin de pouvoir exploiter les données En utilisant notre base de données à ce moment composé de 100 parties, et en faisant travailler notre modèle sur 300 epochs avec une dimension cachée de 20 et un learning rate de 0.001, on obtient ce graphe: [Graphe 1](graphes/Loss_300_epochs_hidden_dim_20.png). On retrouve la training loss en orange, et la testloss en bleu, toutes deux étant une perte cross-entropique.
+On va dans un premier temps utiliser un modèle RNN simple à 42 couches (égal au nombre de choix fait par un joueur) pour obtenir des premiers résultats. Celui-ci sera suivi d'un modèle linaire afin de pouvoir exploiter les données En utilisant notre base de données à ce moment composé de 100 parties, et en faisant travailler notre modèle sur 300 epochs avec une dimension cachée de 20 et un learning rate de 0.001, on obtient ce graphe: [Graphe 1](graphes/Loss_300_epochs_hidden_dim_20.png). On retrouve la training loss en orange, et la testloss en bleu, toutes deux étant une perte cross-entropique.
 
 Plusieurs problèmes avec ce premier graphe:
 - A partir d'une soixantaine d'epochs, la test loss deveint inférieure à la training loss. Ce problème était dû au fait que la fonction de test travaillait sur la même base de données que la fonction d'entraînement. Ce problème a été réglé par la suite.
@@ -54,9 +54,9 @@ Suite à ces premiers résultats, j'ai augmenté la base de données, passant de
 - Avant la transformation en tenseur pytorch, on redimensionne les numpy array de façon à en sortir plusieurs batchs. Dans notre cas, comme notre base de données n'est pas si grande que ça, on ne fera que 5 batchs, générés à partir des phrases précédememnt tokenisées, choisies aléatoirement.
 - Ensuite chaque batch sera utilisé comme test tandis que les autres seront utilisées durant l'entrâinement, dans 5 modèles indépendants
 
-En gardant les mêmes hyper-paramètres d'entrée, et en appliquant une cross validation, on obtient les résultats suivants: [Training Loss](graphes/Training_Loss_300_epochs_hidden_dim_20_cross_val.png), [Test Loss](graphes/Test_Loss_300_epochs_hidden_dim_20_cross_val.png)
+En gardant les mêmes hyper-paramètres d'entrée, et en appliquant une cross validation, on obtient les résultats suivants: [Training Loss](graphes/Training_Loss_300_epochs_hidden_dim_20_cross_val.png), [Test Loss](graphes/Test_Loss_300_epochs_hidden_dim_20_cross_val.png)  [Accuracy](graphes/Test_Loss_300_epochs_hidden_dim_20_cross_val.png)
 
-En augmentant la dimesnion cachée à 50, on obtient ces résultats: [Training Loss](graphes/Training_Loss_300_epochs_hidden_dim_50_cross_val.png), [Test Loss](graphes/Test_Loss_300_epochs_hidden_dim_50_cross_val.png)
+En augmentant la dimesnion cachée à 50, on obtient ces résultats: [Training Loss](graphes/Training_Loss_300_epochs_hidden_dim_50_cross_val.png), [Test Loss](graphes/Test_Loss_300_epochs_hidden_dim_50_cross_val.png) [Accuracy](graphes/Accuracy_300_epochs_hidden_dim_50_cross_val.png)
 
 On voit certes que le premier problème (à savoir une Test Loss inférieure à la Training loss) a été réglé, mais le deuxième problème a empiré. Toutes les pertes calculées, bien  que suivant grossièrement une trajectoire similaire, varient fortement localement. On va donc diminuer le learning rate, passant 0.001 à 0.0001. On obtient alors, avec une dimension cachée de 20, les résultats suivants:
 [Training Loss](graphes/Training_Loss_300_epochs_hidden_dim_20_lr_00001.png), [Test Loss](graphes/Test_Loss_300_epochs_hidden_dim_20_lr_00001.png)
@@ -68,4 +68,8 @@ On va maintenant essayer de pousser notre modèle: On effectue une cross-validat
 - Dimension cachée : 100
 - Learning Rate : 0.0001
   
-On obtient les résultats suivants :
+On obtient les résultats suivants :  [Training Loss](graphes/Training_Loss_500_epochs_hidden_dim_100_lr_00001.png) [Test Loss](graphes/Test_Loss_500_epochs_hidden_dim_100_lr_00001.png) [Accuracy](graphes/Accuracy_500_epochs_hidden_dim_100_lr_00001.png)
+
+On retrouve des résultats de perte similaire à ceux obtenu avant la diminution du learning rate, à savoir autour de 5. On a cependant une anomalie marquée sur l'un des batchs, avec une grande augmantation de la perte qui en l'état pourrait être dû à une mauvaise répartition des données entre les batchs (les cartes peu présentes se sont peut-être retrouvés dans le même batch).
+
+Pour conclure, même si on obtient un modèle fonctionnel, il reste de nombreuses pistes pour optimiser le modèle qui n'ont pas pu être mis en place par manque de temps. Comme dit précédemment, on aurait pu limiter les choix du modèle 
